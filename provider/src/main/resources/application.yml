@@ -10,10 +10,6 @@ logging:
     org.apache: WARN
     it.minetti: DEBUG
 
-feign:
-  hystrix:
-    enabled: true
-
 spring:
   main:
     banner-mode: OFF

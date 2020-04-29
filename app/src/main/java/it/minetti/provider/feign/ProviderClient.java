@@ -6,9 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigInteger;
 
-@FeignClient(name = "provider",
-        configuration = ProviderClientConfig.class,
-        fallback = ProviderClientFallback.class)
+@FeignClient(name = "provider", configuration = ProviderClientConfig.class)
 public interface ProviderClient {
 
     @GetMapping("/prime")

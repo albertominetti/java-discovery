@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @RefreshScope
 @RestController
-public class EntryPointController {
+public class AppController {
 
     @Autowired
     private ProviderClient providerClient;
