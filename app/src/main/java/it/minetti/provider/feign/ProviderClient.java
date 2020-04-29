@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigInteger;
 
-@FeignClient(name = "provider", url = "http://localhost:8081",
+@FeignClient(name = "provider",
         configuration = ProviderClientConfig.class,
         fallback = ProviderClientFallback.class)
 public interface ProviderClient {

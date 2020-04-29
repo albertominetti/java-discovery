@@ -27,18 +27,4 @@ public class FeignConfig {
         return new SpringEncoder(HttpMessageConverters::new);
     }
 
-
-//    @Configuration
-//    public class RetryConfiguration {
-//        @Bean
-//        LoadBalancedRetryFactory retryFactory() {
-//            return new LoadBalancedRetryFactory() {
-//                @Override
-//                public BackOffPolicy createBackOffPolicy(String service) {
-//                    return new ExponentialBackOffPolicy();
-//                }
-//            };
-//        }
-//    }
-
 }
