@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
-        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
         <caffeine.version>2.8.1</caffeine.version>
         <jmh.version>1.23</jmh.version>
         <lombok.version>1.18.2</lombok.version>
@@ -54,12 +54,6 @@
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
             <version>${caffeine.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
