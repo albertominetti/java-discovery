@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+
+  app:
+    build:
+      context: "app/"
+      args:
+        JAR_FILE: "target/app.jar"
+    ports:
+      - "8080:8080"
+    environment:
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+      GRAYLOG_HOST: graylog
+      GRAYLOG_PORT: 12201
+    container_name: app
+    depends_on:
+      - provider
+    networks:
+      - my-network
+
+  provider:
+    build:
+      context: "provider/"
+      args:
+        JAR_FILE: "target/provider.jar"
+    ports:
+      - "8085-8090:8080"
+    environment:
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+      GRAYLOG_HOST: graylog
+      GRAYLOG_PORT: 12201
+    networks:
+      - my-network
+
+networks:
+  my-network:
