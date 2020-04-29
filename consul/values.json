@@ -1,0 +1,12 @@
+[
+  {
+    "key": "config/app/LIST_COUNT",
+    "flags": 0,
+    "value": "MTA="
+  },
+  {
+    "key": "config/provider/PRIME_SIZE",
+    "flags": 0,
+    "value": "MTUwMA=="
+  }
+]
