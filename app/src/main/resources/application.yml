@@ -1,0 +1,13 @@
+app:
+  settings:
+    list-count: ${LIST_COUNT}
+
+logging:
+  level:
+    root: INFO
+    org.springwramework: WARN
+    feign: INFO
+    com.netflix: INFO
+    org.springframework.retry: TRACE
+    it.minetti: DEBUG
+

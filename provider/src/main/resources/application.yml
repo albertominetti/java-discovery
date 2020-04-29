@@ -1,0 +1,14 @@
+provider:
+  settings:
+    prime-size: ${PRIME_SIZE}
+    instance-id: ${spring.cloud.consul.discovery.instance-id}
+
+logging:
+  level:
+    root: INFO
+    org.springwramework: WARN
+    it.minetti: DEBUG
+
+feign:
+  hystrix:
+    enabled: true
