@@ -12,18 +12,18 @@
         </encoder>
     </appender>
 
-    <appender name="GELF" class="de.siegmar.logbackgelf.GelfTcpAppender">
-        <graylogHost>${GRAYLOG_HOST}</graylogHost>
-        <graylogPort>${GRAYLOG_PORT}</graylogPort>
-    </appender>
+<!--    <appender name="GELF" class="de.siegmar.logbackgelf.GelfTcpAppender">-->
+<!--        <graylogHost>${GRAYLOG_HOST}</graylogHost>-->
+<!--        <graylogPort>${GRAYLOG_PORT}</graylogPort>-->
+<!--    </appender>-->
 
 
-    <appender name="ASYNC GELF" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="GELF" />
-    </appender>
+<!--    <appender name="ASYNC GELF" class="ch.qos.logback.classic.AsyncAppender">-->
+<!--        <appender-ref ref="GELF" />-->
+<!--    </appender>-->
 
     <root level="info">
-        <appender-ref ref="ASYNC GELF" />
+<!--        <appender-ref ref="ASYNC GELF" />-->
         <appender-ref ref="STDOUT" />
     </root>
 
