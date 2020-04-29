@@ -5,9 +5,12 @@ app:
 logging:
   level:
     root: INFO
-    org.springwramework: WARN
+    org.springframework: WARN
+    org.apache: WARN
     feign: INFO
-    com.netflix: INFO
-    org.springframework.retry: TRACE
+    com.netflix: WARN
     it.minetti: DEBUG
 
+spring:
+  main:
+    banner-mode: OFF

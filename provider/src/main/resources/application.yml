@@ -6,9 +6,14 @@ provider:
 logging:
   level:
     root: INFO
-    org.springwramework: WARN
+    org.springframework: WARN
+    org.apache: WARN
     it.minetti: DEBUG
 
 feign:
   hystrix:
     enabled: true
+
+spring:
+  main:
+    banner-mode: OFF
