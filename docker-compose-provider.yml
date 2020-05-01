@@ -2,23 +2,22 @@ version: '3.7'
 
 services:
 
-  app:
-    restart: always
+  provider:
+    restart: on-failure
     build:
-      context: "./app"
+      context: "./provider"
       args:
-        JAR_FILE: "target/app.jar"
+        JAR_FILE: "target/provider.jar"
     ports:
-      - "8080:8080"
+      - "8085-8090:8080"
     environment:
       - "CONSUL_HOST=consul"
       - "CONSUL_PORT=8500"
       - "LOGGING_FILE_PATH=/logs"
-    container_name: app
     volumes:
-      - log_app_volume:/logs
+      - log_provider_volume:/logs
 
-  app-log-fw:
+  provider-log-fw:
     image: splunk/universalforwarder:7.3.0
     environment:
       - "SPLUNK_START_ARGS=--accept-license --answer-yes --name uf"
@@ -28,9 +27,9 @@ services:
       - "SPLUNK_PASSWORD=password"
     restart: always
     depends_on:
-      - app
+      - provider
     volumes:
-      - log_app_volume:/logs
+      - log_provider_volume:/logs
 
 volumes:
-  log_app_volume:
+  log_provider_volume:
