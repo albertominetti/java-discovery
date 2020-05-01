@@ -1,13 +1,5 @@
 spring:
+  profiles:
+    include: ["common"]
   application:
     name: provider
-  cloud:
-    consul:
-      host: ${CONSUL_HOST}
-      port: ${CONSUL_PORT}
-      discovery:
-        prefer-ip-address: true
-        instance-id: ${spring.application.name}-${spring.cloud.client.ip-address}
-    loadbalancer:
-      ribbon:
-        enabled: false

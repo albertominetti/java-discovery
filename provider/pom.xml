@@ -12,6 +12,14 @@
 
     <artifactId>provider</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>it.minetti</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>

@@ -1,15 +1,8 @@
+spring:
+  profiles:
+    include: ["common"]
+
 provider:
   settings:
     prime-size: ${PRIME_SIZE}
     instance-id: ${spring.cloud.consul.discovery.instance-id}
-
-logging:
-  level:
-    root: INFO
-    org.springframework: WARN
-    org.apache: WARN
-    it.minetti: DEBUG
-
-spring:
-  main:
-    banner-mode: OFF

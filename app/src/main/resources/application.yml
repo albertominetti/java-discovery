@@ -1,16 +1,7 @@
+spring:
+  profiles:
+    include: ["common"]
+
 app:
   settings:
     list-count: ${LIST_COUNT}
-
-logging:
-  level:
-    root: INFO
-    org.springframework: WARN
-    org.apache: WARN
-    feign: INFO
-    com.netflix: WARN
-    it.minetti: DEBUG
-
-spring:
-  main:
-    banner-mode: OFF
