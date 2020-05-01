@@ -9,7 +9,7 @@ services:
       args:
         JAR_FILE: "target/provider.jar"
     ports:
-      - "8085-8090:8080"
+      - "8085-8095:8080"
     environment:
       - "CONSUL_HOST=consul"
       - "CONSUL_PORT=8500"
