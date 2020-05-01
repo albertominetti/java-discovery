@@ -15,60 +15,21 @@ services:
         done; \
         consul kv import @/tmp/values.json && \
         tail -f /dev/null'
+    hostname: consul
     ports:
       - "8500:8500"
       - "8600:8600/udp"
     container_name: consul
-    networks:
-      - my-network
 
-  mongodb:
-    image: mongo:3
-    container_name: mongo
-    networks:
-      - my-network
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.6.1
+  splunk:
+    build: "./splunk"
     environment:
-      - http.host=0.0.0.0
-      - transport.host=localhost
-      - network.host=0.0.0.0
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
-    container_name: elasticsearch
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-    networks:
-      - my-network
-
-  graylog:
-    image: graylog/graylog:3.2.4-1
-    command: |
-      sh -c 'set -uex; \
-        graylog & echo inzio a contare; sleep 10; echo finitoooo; \
-        GRAYLOG2_URL="http://admin:admin@localhost:9000"; \
-        let "timeout = $$(date +%s) + 15"; \
-        GRAYLOG2_INPUT_GELF_TCP={"global":"true","title":"tcp-input-gelf","configuration":{"port":12201,"bind_address":"0.0.0.0"},"type":"org.graylog2.inputs.gelf.tcp.GELFTCPInput"}; \
-        curl -s -X POST -H "Content-Type: application/json" -H "X-Requested-By: cli" -d "$${GRAYLOG2_INPUT_GELF_TCP}" $${GRAYLOG2_URL}/api/system/inputs ; \
-        tail -f /dev/null '
-    environment:
-      - GRAYLOG_PASSWORD_SECRET=somepasswordpepper
-      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
-      - GRAYLOG_HTTP_EXTERNAL_URI=http://192.168.99.100:9000/
-    container_name: graylog
-    depends_on:
-      - mongodb
-      - elasticsearch
+      - "SPLUNK_LICENSE_URI=Free"
+      - "SPLUNK_START_ARGS=--accept-license --answer-yes"
+      - "SPLUNK_USER=root"
+      - "SPLUNK_ENABLE_LISTEN=9997"
+      - "SPLUNK_PASSWORD=password"
+    hostname: splunk
     ports:
-      - 9000:9000       # Graylog web interface and REST API
-      - 1514:1514       # Syslog TCP
-      - 1514:1514/udp   # Syslog UDP
-      - 12201:12201     # GELF TCP
-      - 12201:12201/udp # GELF UDP
-    networks:
-      - my-network
-
-networks:
-  my-network:
+      - "8000:8000"
+    container_name: splunk
