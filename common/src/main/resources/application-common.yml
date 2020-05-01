@@ -1,0 +1,12 @@
+
+logging:
+  level:
+    root: INFO
+    com.netflix: WARN
+    com.netflix.config.sources.URLConfigurationSource: ERROR
+    org.apache: WARN
+    org.springframework: WARN
+
+spring:
+  main:
+    banner-mode: OFF

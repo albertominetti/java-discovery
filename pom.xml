@@ -42,9 +42,14 @@
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.siegmar</groupId>
-            <artifactId>logback-gelf</artifactId>
-            <version>3.0.0</version>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>6.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -177,6 +182,7 @@
     </build>
 
     <modules>
+        <module>common</module>
         <module>app</module>
         <module>provider</module>
     </modules>

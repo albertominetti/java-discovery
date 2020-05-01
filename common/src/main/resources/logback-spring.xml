@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+<!--<property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{HH:mm:ss.SSS}){yellow} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>-->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%-5.5thread]){magenta} %clr(%-30.30logger{10}){cyan} - %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active"/>
+    <if condition='property("ACTIVE_PROFILE").equals("dev")'>
+        <then>
+            <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder>
+                    <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+                    <charset>UTF-8</charset>
+                </encoder>
+            </appender>
+            <root level="info">
+                <appender-ref ref="STDOUT" />
+            </root>
+        </then>
+        <else>
+        <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+        <appender name="logstash" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_FILE}.json</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_FILE}.json.%d{yyyy-MM-dd}.gz</fileNamePattern>
+                <maxHistory>7</maxHistory>
+            </rollingPolicy>
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp>
+                        <timeZone>UTC</timeZone>
+                    </timestamp>
+                    <pattern>
+                        <pattern>
+                            {
+                                "severity": "%level",
+                                "service": "${springAppName:-}",
+                                "trace": "%X{X-B3-TraceId:-}",
+                                "span": "%X{X-B3-SpanId:-}",
+                                "parent": "%X{X-B3-ParentSpanId:-}",
+                                "thread": "%thread",
+                                "logger": "%logger{40}",
+                                "message": "%message"
+                            }
+                        </pattern>
+                    </pattern>
+                </providers>
+            </encoder>
+        </appender>
+            <root level="info">
+                <appender-ref ref="logstash" />
+            </root>
+        </else>
+    </if>
+
+
+</configuration>

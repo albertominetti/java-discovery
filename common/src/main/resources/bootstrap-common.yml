@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    consul:
+      host: ${CONSUL_HOST}
+      port: ${CONSUL_PORT}
+      discovery:
+        prefer-ip-address: true
+        instance-id: ${spring.application.name}-${spring.cloud.client.ip-address}
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+logging:
+  file:
+    path: "./log"
+    name: ${logging.file.path}/${spring.cloud.consul.discovery.instance-id}
