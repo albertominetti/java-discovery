@@ -29,7 +29,7 @@ public class AppController {
         log.info("Initialized with {} list count", settings.getListCount());
     }
 
-    @GetMapping("/")
+    @GetMapping("/list")
     public List<BigInteger> retrieveList() {
         log.info("Requesting several prime numbers...");
         List<BigInteger> list = IntStream.rangeClosed(1, settings.getListCount())

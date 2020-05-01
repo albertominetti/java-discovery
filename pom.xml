@@ -162,6 +162,9 @@
                             <goal>up</goal>
                         </goals>
                         <configuration>
+                            <composeFile>${project.basedir}/docker-compose-infra.yml</composeFile>
+                            <composeFile>${project.basedir}/docker-compose-provider.yml</composeFile>
+                            <composeFile>${project.basedir}/docker-compose-app.yml</composeFile>
                             <detachedMode>true</detachedMode>
                             <build>true</build>
                         </configuration>
@@ -175,6 +178,8 @@
                 </executions>
                 <configuration>
                     <composeFile>${project.basedir}/docker-compose-infra.yml</composeFile>
+                    <composeFile>${project.basedir}/docker-compose-provider.yml</composeFile>
+                    <composeFile>${project.basedir}/docker-compose-app.yml</composeFile>
                     <removeVolumes>true</removeVolumes>
                 </configuration>
             </plugin>
@@ -183,8 +188,8 @@
 
     <modules>
         <module>common</module>
-        <module>app</module>
         <module>provider</module>
+        <module>app</module>
     </modules>
 
 </project>
