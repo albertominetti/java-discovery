@@ -6,6 +6,7 @@ logging:
     com.netflix.config.sources.URLConfigurationSource: ERROR
     org.apache: WARN
     org.springframework: WARN
+    it.minetti: DEBUG
 
 spring:
   main:
