@@ -1,6 +1,5 @@
 #! /bin/bash
 set -e
-set -x
 
 if [[ $1 == '' ]]; then
   echo "Please use the commands: start, stop or status" >&2
