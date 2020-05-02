@@ -19,7 +19,8 @@ services:
       - log_app_volume:/logs
 
   app-log-fw:
-    image: splunk/universalforwarder:7.3.0
+    image: splunk/universalforwarder:8.0
+    hostname: app-log-fw
     environment:
       - "SPLUNK_START_ARGS=--accept-license --answer-yes --name uf"
       - "SPLUNK_STANDALONE_URL=splunk:9997"
