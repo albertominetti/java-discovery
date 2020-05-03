@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -33,7 +34,7 @@ public class EnableWebLoggingInterceptor implements WebMvcConfigurer {
         }
 
         @Override
-        public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
             if (handler instanceof HandlerMethod) {
                 HandlerMethod handlerMethod = (HandlerMethod) handler;
                 Logger logger = LoggerFactory.getLogger(handlerMethod.getBeanType());
@@ -42,5 +43,6 @@ public class EnableWebLoggingInterceptor implements WebMvcConfigurer {
                 logger.debug("---> {} [{}ms]", response.getStatus(), System.currentTimeMillis() - startTime);
             }
         }
+
     }
 }

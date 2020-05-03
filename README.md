@@ -106,8 +106,7 @@ The Splunk interface is available here, user is `admin` and password is `passwor
 
 It allows to query the logs in a single place, it scrapes the distributed log directories for you thanks to the splunk universal forwarder. An example of a query is shown here:
 
-* http://192.168.99.100:8000/it-IT/app/search/search?q=search%20service%20%3D%20%22provider%22%20OR%20service%20%3D%20%22app%22&display.page.search.mode=smart&dispatch.sample_ratio=1&workload_pool=&earliest=rt-5m&latest=rt&display.events.type=table&display.events.fields=%5B%22service%22%2C%22severity%22%2C%22logger%22%2C%22message%22%5D&display.prefs.events.count=50&sid=rt_1588348109.34
-
+* [Splunk simple query for app and provider](http://192.168.99.100:8000/it-IT/app/search/search?q=search%20service%20%3D%20%22provider%22%20OR%20service%20%3D%20%22app%22&display.page.search.mode=smart&dispatch.sample_ratio=1&workload_pool=&earliest=rt-30m&latest=rt&display.events.type=table&display.events.fields=%5B%22service%22%2C%22severity%22%2C%22logger%22%2C%22message%22%2C%22hostname%22%2C%22trace%22%5D&display.prefs.events.count=50&display.events.table.sortColumn=logger&sid=rt_1588504644.9&display.page.search.tab=events)
 
 ![Splunk query](docs/splunk-query.PNG "Splunk generic query")
 
@@ -161,12 +160,12 @@ The third endpoint retrieves several data from the provider and aggregate them i
 The microservices are tracing-enabled thanks to the `spring-cloud-starter-sleuth` dependency, compliant with `zipkin` standard. A very simple test you can do is using the following query:
 
 ```sh
-curl -H 'X-B3-TraceId: 7a662697e3f1b111' -H 'X-B3-SpanId: 7a662697e3f1b112' '192.168.99.100:8080/list'
+curl -H 'X-B3-TraceId: 7a662697e3f1b112' -H 'X-B3-SpanId: 7a662697e3f1b112' '192.168.99.100:8080/list'
 ```
 
 Then you can check in the logs for the specific trace id to follow what happened to this specific request in the whole end-to-end processing. We have the centralized logging, so you can use this query instead of `ssh` and `grep` on every the machine and instances.
 
-* http://192.168.99.100:8000/it-IT/app/search/search?q=search%20trace%3D7a662697e3f1b111&display.page.search.mode=smart&dispatch.sample_ratio=1&workload_pool=&earliest=rt-30m&latest=rt&display.events.type=table&display.events.fields=%5B%22service%22%2C%22severity%22%2C%22logger%22%2C%22message%22%2C%22trace%22%2C%22span%22%5D&display.prefs.events.count=50&display.events.rowNumbers=0&display.events.table.wrap=1&display.events.list.wrap=1&display.events.maxLines=5&display.page.search.tab=events&sid=rt_1588358918.1224
+* [Splunk query for trace = 7a662697e3f1b112](http://192.168.99.100:8000/it-IT/app/search/search?q=search%20trace%3D7a662697e3f1b112&display.page.search.mode=smart&dispatch.sample_ratio=1&workload_pool=&earliest=rt-30m&latest=rt&display.events.type=table&display.events.fields=%5B%22service%22%2C%22severity%22%2C%22logger%22%2C%22message%22%2C%22trace%22%2C%22span%22%5D&display.prefs.events.count=50&display.events.rowNumbers=0&display.events.table.wrap=1&display.events.list.wrap=1&display.events.maxLines=5&display.page.search.tab=events&sid=rt_1588358918.1224)
 
 ![Splunk tracing](docs/splunk-tracing.PNG "Splunk query result for tracing")
 
@@ -174,18 +173,16 @@ Then you can check in the logs for the specific trace id to follow what happened
 
 There are several points that are present just for a matter of sample, and are not intended to bring to an enterprise production environment. 
 
-1. The retry mechanism is not always a good idea, because continuing to query an overloaded system may lead to decrease the performances of it; the useful exponential backoff is very useful in this scenario, but could be better also to setup a proper circuit breaker pattern using `hystrix` or the newest `resilience4j`.
+1. The retry mechanism is not always a good idea, because continuing to query an overloaded system may lead to decrease the performances of it. An exponential retry backoff can be useful, or you can follow the fail fast principle setting up a proper circuit breaker pattern using `hystrix` or the newest `resilience4j`.
 
-2. Retry can be done in two ways: (a) query multiple times the same provider instance (implemented by `Retryer`) or (b) try with the next instance each attempt (implemented by `LoadBalancedRetryFactory`), both configuration are present in the application but just one is really needed.
+2. In the main application there is just a single feign client, so does not matter if its own configuration are specific (using the `configuration` property of the `@FeignClient`) or global (annotating the configuration using `@Configuration`).
 
-3. In the main application there is just a single feign client, so does not matter if its own configuration are specific (using the `configuration` property of the `@FeignClient`) or global (annotating the configuration using `@Configuration`).
+3. Splunk is a very powerful tool, no license is required if the daily log data is below 500MB, with more data an enterprise licence is required. There are free alternatives like `Kibana` and `graylog`.
 
-4. Splunk is a very powerful tool, no license is required if the daily log data is below 500MB, with more data an enterprise licence is required. There are free alternatives like `Kibana` and `graylog`.
+4. I choose to use the splunk universal forwarder, but also the http connector, `fluentd` and `GELF` can be very good alternatives.
 
-5. I choose to use the splunk universal forwarder, but also the http connector, `fluentd` and `GELF` can be very good alternatives.
+5. Despite the automatic refresh of properties from the configuration server is enabled by default, I strongly suggest to disable it using the property `spring.cloud.config.enable=false`. In a real situation is better to prepare all the properties, also related to more than one microservice, and then refresh the configuration in the specific microservices all at once. This is feasible thanks to the http `actuator/refresh` endpoint.
 
-6. Despite the automatic refresh of properties from the configuration server is enabled by default, I strongly suggest to disable it using the property `spring.cloud.config.enable=false`. In a real situation is better to prepare all the properties, also related to more than one microservice, and then refresh the configuration in the specific microservices all at once. This is feasible thanks to the http `actuator/refresh` endpoint.
-
-7. All the environment can run using docker, as I implemented, but the current configuration for the infrastructure is very far from an good production ready configuration.
+6. All the environment can run using docker, as I implemented, but the current configuration for the infrastructure is very far from an good production ready configuration.
 
 _Enjoy, Alberto._
