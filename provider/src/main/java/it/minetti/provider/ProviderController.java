@@ -1,5 +1,7 @@
 package it.minetti.provider;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +43,11 @@ public class ProviderController {
     public static class Response {
         private final BigInteger prime;
         private String instanceId;
+
+        @JsonCreator
+        // better and implicit way: https://github.com/FasterXML/jackson-modules-java8/tree/master/parameter-names
+        public Response(@JsonProperty("prime") BigInteger prime) {
+            this.prime = prime;
+        }
     }
 }

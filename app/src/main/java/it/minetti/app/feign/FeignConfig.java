@@ -1,4 +1,4 @@
-package it.minetti.provider.feign;
+package it.minetti.app.feign;
 
 import feign.codec.Decoder;
 import feign.codec.Encoder;

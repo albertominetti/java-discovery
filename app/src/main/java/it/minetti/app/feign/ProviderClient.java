@@ -1,4 +1,4 @@
-package it.minetti.provider.feign;
+package it.minetti.app.feign;
 
 import lombok.Data;
 import org.springframework.cloud.openfeign.FeignClient;

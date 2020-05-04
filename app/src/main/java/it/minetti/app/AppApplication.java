@@ -1,4 +1,4 @@
-package it.minetti.provider;
+package it.minetti.app;
 
 import it.minetti.common.EnableWebLoggingInterceptor;
 import lombok.Data;

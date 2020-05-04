@@ -1,6 +1,6 @@
-package it.minetti.provider;
+package it.minetti.app;
 
-import it.minetti.provider.feign.ProviderClient;
+import it.minetti.app.feign.ProviderClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;

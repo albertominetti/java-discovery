@@ -1,0 +1,17 @@
+
+spring:
+  cloud:
+    bus:
+      enabled: false
+    discovery:
+      enabled: false
+    consul:
+      enabled: false
+    config:
+      enabled: false
+
+LIST_COUNT: 10
+
+logging:
+  file:
+    path: "./target"
