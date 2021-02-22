@@ -6,22 +6,16 @@ import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ServerList;
 import feign.FeignException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.netflix.ribbon.StaticServerList;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigInteger;
 
@@ -31,31 +25,36 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("feign")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = {ProviderClientIT.WireMockInitializer.class})
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 public class ProviderClientIT {
 
-    @Autowired
-    private WireMockServer wireMockServer;
+    static WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().dynamicPort());
 
     @Autowired
     ProviderClient providerClient;
 
-    @LocalServerPort
-    private Integer port;
+    @BeforeAll
+    static void setUp() {
+        wireMockServer.start();
+    }
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         configureFor("localhost", wireMockServer.port());
     }
 
     @AfterEach
-    public void afterEach() {
+    void afterEach() {
         wireMockServer.resetAll();
     }
 
+    @AfterAll
+    static void cleanUp() {
+        wireMockServer.stop();
+    }
+
     @Test
-    public void retrievePrime_succesfull() {
+    void retrievePrime_succesfull() {
         // given
         wireMockServer.stubFor(get("/prime")
                 .willReturn(aResponse()
@@ -73,7 +72,7 @@ public class ProviderClientIT {
     }
 
     @Test
-    public void maybeRetrievePrime_succesfull_with_retries() {
+    void maybeRetrievePrime_succesfull_with_retries() {
         // given
         wireMockServer.stubFor(get("/maybe-prime")
                 .inScenario("Retry Scenario")
@@ -108,7 +107,7 @@ public class ProviderClientIT {
 
 
     @Test
-    public void maybeRetrievePrime_fail() {
+    void maybeRetrievePrime_fail() {
         // given
         wireMockServer.stubFor(get("/maybe-prime")
                 .willReturn(aResponse().withStatus(500))
@@ -122,28 +121,10 @@ public class ProviderClientIT {
         verify(exactly(3), getRequestedFor(urlEqualTo("/maybe-prime")));
     }
 
-    public static class WireMockInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-        @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().dynamicPort());
-            wireMockServer.start();
-
-            configurableApplicationContext.getBeanFactory().registerSingleton("wireMockServer", wireMockServer);
-
-            configurableApplicationContext.addApplicationListener(applicationEvent -> {
-                if (applicationEvent instanceof ContextClosedEvent) {
-                    wireMockServer.stop();
-                }
-            });
-
-        }
-    }
-
     @TestConfiguration
     public static class RibbonConfiguration {
         @Bean
-        public ServerList<Server> ribbonServerList(WireMockServer wireMockServer) {
+        public ServerList<Server> ribbonServerList() {
             return new StaticServerList<>(new Server("localhost", wireMockServer.port()));
         }
     }
