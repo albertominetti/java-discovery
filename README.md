@@ -35,7 +35,7 @@ mvn clean package -DskipTests &&
   docker-compose -f docker-compose-app.yml up --build -d
 ```
 
-For simplicity you can build and run all together:
+For simplicity, you can build and run all together:
 
 ```sh
 mvn clean package -DskipTests && 
