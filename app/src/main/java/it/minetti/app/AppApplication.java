@@ -1,6 +1,7 @@
 package it.minetti.app;
 
 import it.minetti.common.EnableWebLoggingInterceptor;
+import it.minetti.common.SwaggerConfig;
 import lombok.Data;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @EnableConfigurationProperties(AppApplication.AppSettings.class)
-@Import(EnableWebLoggingInterceptor.class)
+@Import({EnableWebLoggingInterceptor.class, SwaggerConfig.class})
 public class AppApplication {
 
     public static void main(String[] args) {
