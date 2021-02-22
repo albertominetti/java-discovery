@@ -54,7 +54,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>it.minetti.provider.AppApplication</mainClass>
+                    <mainClass>it.minetti.app.AppApplication</mainClass>
                     <layout>ZIP</layout>
                     <executable>true</executable> <!-- only for *nix machines -->
                 </configuration>
